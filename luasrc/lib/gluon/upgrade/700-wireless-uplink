@@ -1,0 +1,31 @@
+#!/usr/bin/lua
+
+local uci = require('simple-uci').cursor()
+local wireless = require('gluon.wireless')
+
+if not uci:get_bool('wifi-uplink', 'uplink', 'enabled') then
+	os.exit(0)
+end
+
+local radio_name = uci:get('wifi-uplink', 'uplink', 'radio')
+
+if not radio_name then
+	os.exit(0)
+end
+
+local radio_idx = radio_name:match('^radio(%d+)$')
+
+uci:del('wireless', 'owe_radio' .. radio_idx)
+uci:del('wireless', 'mesh_radio' .. radio_idx)
+uci:del('wireless', 'client_radio' .. radio_idx)
+uci:del('wireless', 'wan_radio' .. radio_idx)
+
+uci:section('wireless', 'wifi-iface', 'wwan', {
+	device     = radio_name,
+	network    = 'wwan',
+	mode       = 'sta',
+	ssid       = 'WiFi Darmstadt',
+	macaddr    = wireless.get_wlan_mac(uci, radio_name, radio_idx, 0),
+})
+
+uci:commit('wireless')

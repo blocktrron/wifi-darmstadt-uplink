@@ -1,0 +1,82 @@
+#!/usr/bin/lua
+
+local ubus = require('ubus').connect()
+local uci = require('simple-uci').cursor()
+local wireless = require('gluon.wireless')
+
+local connectivity_check_file = '/tmp/connectivitycheck'
+local connectivity_check_content = 'NetworkManager is online'
+local connectivity_check_url = 'http://nmcheck.gnome.org/check_network_status.txt'
+
+
+local function is_enabled()
+	return uci:get_bool('wifi-uplink', 'enabled', 'true')
+end
+
+
+local function clean_connectivity_check_file()
+	os.execute('rm ' .. connectivity_check_file)
+end
+
+
+-- Returns 0 on success, 1 on missing captive portal auth, 2 on missing Wireless connection
+local function check_connectivity()
+	-- Check if our interface has connection
+	local status = ubus:call('network.interface.wwan', 'status', {})
+	if status['up'] ~= true then
+		return 2
+	end
+
+	-- Make sure we query this using the WAN resolver
+	local ret = os.execute('gluon-wan curl -o ' .. connectivity_check_file .. ' ' .. connectivity_check_url)
+
+	if ret ~= 0 then
+		clean_connectivity_check_file()
+		return 1
+	end
+
+	for line in io.lines(connectivity_check_file) do
+		if line == connectivity_check_content then
+			clean_connectivity_check_file()
+			return 0
+		end
+	end
+
+	-- Make sure to clean up
+	clean_connectivity_check_file()
+	return 1
+end
+
+
+local function get_current_mac_index(radio_name, radio_idx, current_mac)
+	for i=0,7 do
+		local mac = wireless.get_wlan_mac(nil, radio_name, radio_idx, i)
+		if mac == current_mac then
+			return i
+		end
+	end
+	return -1
+end
+
+
+if not is_enabled then
+	os.exit(0)
+end
+
+if check_connectivity == 0 or check_connectivity == 2 then
+	-- Not connected or we are fine
+	os.exit(0)
+end
+
+-- ToDo add minimal interval to rotate MAC
+
+-- Rotate MAC address. Captive portal will be handled on interface up.
+local radio_name = uci:get('wifi-uplink', 'uplink', 'radio')
+local radio_idx = radio_name:match('^radio(%d+)$')
+
+local mac_idx = get_current_mac_index(radio_name, radio_idx, uci:get('wireless', 'wwan', 'macaddr'))
+local new_mac = wireless.get_wlan_mac(uci, radio_name, radio_idx, mac_idx + 1)
+
+uci:set('wireless', 'wwan', 'macaddr', new_mac)
+uci:commit('wireless')
+os.execute('wifi')

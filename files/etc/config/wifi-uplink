@@ -1,0 +1,2 @@
+config wifi-uplink 'uplink'
+	option enabled '0'
