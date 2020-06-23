@@ -15,10 +15,10 @@ end
 
 local radio_idx = radio_name:match('^radio(%d+)$')
 
-uci:del('wireless', 'owe_radio' .. radio_idx)
-uci:del('wireless', 'mesh_radio' .. radio_idx)
-uci:del('wireless', 'client_radio' .. radio_idx)
-uci:del('wireless', 'wan_radio' .. radio_idx)
+uci:delete('wireless', 'owe_radio' .. radio_idx)
+uci:delete('wireless', 'mesh_radio' .. radio_idx)
+uci:delete('wireless', 'client_radio' .. radio_idx)
+uci:delete('wireless', 'wan_radio' .. radio_idx)
 
 uci:section('wireless', 'wifi-iface', 'wwan', {
 	device     = radio_name,
