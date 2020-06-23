@@ -64,7 +64,7 @@ if not is_enabled then
 end
 
 -- Refresh captive portal
-os.execute("/lib/wifi-uplink/wifi-darmstadt/captive.sh")
+os.execute("gluon-wan /lib/wifi-uplink/wifi-darmstadt/captive.sh")
 
 local connectivity_state = check_connectivity()
 
