@@ -20,9 +20,11 @@ uci:delete('wireless', 'mesh_radio' .. radio_idx)
 uci:delete('wireless', 'client_radio' .. radio_idx)
 uci:delete('wireless', 'wan_radio' .. radio_idx)
 
+uci:delete('wireless', 'wwan')
 uci:section('wireless', 'wifi-iface', 'wwan', {
 	device     = radio_name,
 	network    = 'wwan',
+	ifname     = 'wwan',
 	mode       = 'sta',
 	ssid       = 'WiFi Darmstadt',
 	macaddr    = wireless.get_wlan_mac(uci, radio_name, radio_idx, 0),
