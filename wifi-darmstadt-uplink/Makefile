@@ -11,7 +11,7 @@ include $(TOPDIR)/../package/gluon.mk
 
 define Package/wifi-darmstadt-uplink
   TITLE:=Automatically use public WiFi as WAN uplink
-  DEPENDS:=+gluon-core +wpa-supplicant
+  DEPENDS:=+gluon-core
 endef
 
 $(eval $(call BuildPackageGluon,wifi-darmstadt-uplink))
