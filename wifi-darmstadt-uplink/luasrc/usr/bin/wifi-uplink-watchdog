@@ -80,7 +80,7 @@ local radio_name = uci:get('wifi-uplink', 'uplink', 'radio')
 local radio_idx = radio_name:match('^radio(%d+)$')
 
 local mac_idx = get_current_mac_index(radio_name, radio_idx, uci:get('wireless', 'wwan', 'macaddr'))
-local new_mac = wireless.get_wlan_mac(uci, radio_name, radio_idx, mac_idx + 1)
+local new_mac = wireless.get_wlan_mac(uci, radio_name, radio_idx, (mac_idx % 7) + 1)
 
 uci:set('wireless', 'wwan', 'macaddr', new_mac)
 uci:commit('wireless')
