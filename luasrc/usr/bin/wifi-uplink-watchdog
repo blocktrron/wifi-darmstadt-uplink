@@ -79,4 +79,4 @@ local new_mac = wireless.get_wlan_mac(uci, radio_name, radio_idx, mac_idx + 1)
 
 uci:set('wireless', 'wwan', 'macaddr', new_mac)
 uci:commit('wireless')
-os.execute('wifi')
+os.execute('wifi up ' .. radio_name)
