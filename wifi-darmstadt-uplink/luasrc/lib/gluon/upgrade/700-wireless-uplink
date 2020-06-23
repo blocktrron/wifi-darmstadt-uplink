@@ -27,7 +27,7 @@ uci:section('wireless', 'wifi-iface', 'wwan', {
 	ifname     = 'wwan',
 	mode       = 'sta',
 	ssid       = 'WiFi Darmstadt',
-	macaddr    = wireless.get_wlan_mac(uci, radio_name, radio_idx, 0),
+	macaddr    = wireless.get_wlan_mac(uci, radio_name, radio_idx, 1),
 })
 
 uci:commit('wireless')
