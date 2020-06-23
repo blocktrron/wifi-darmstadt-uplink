@@ -74,6 +74,7 @@ if connectivity_state == 0 or connectivity_state == 2 then
 end
 
 -- ToDo add minimal interval to rotate MAC
+os.exit(0)
 
 -- Rotate MAC address. Captive portal will be handled on interface up.
 local radio_name = uci:get('wifi-uplink', 'uplink', 'radio')
