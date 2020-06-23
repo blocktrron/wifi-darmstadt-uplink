@@ -63,7 +63,12 @@ if not is_enabled then
 	os.exit(0)
 end
 
-if check_connectivity == 0 or check_connectivity == 2 then
+-- Refresh captive portal
+os.execute("/lib/wifi-uplink/wifi-darmstadt/captive.sh")
+
+local connectivity_state = check_connectivity()
+
+if connectivity_state == 0 or connectivity_state == 2 then
 	-- Not connected or we are fine
 	os.exit(0)
 end
