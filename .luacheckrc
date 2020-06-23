@@ -9,6 +9,6 @@ read_globals = {
 }
 
 include_files = {
-	"*.lua",
-	"luasrc/**/*",
+	"wifi-darmstadt-uplink/*.lua",
+	"wifi-darmstadt-uplink/luasrc/**/*",
 }
