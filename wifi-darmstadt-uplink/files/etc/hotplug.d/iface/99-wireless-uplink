@@ -1,3 +1,4 @@
 if [ "$INTERFACE" = 'wwan' ]; then
+   /lib/gluon/wan-dnsmasq/update.lua
    gluon-wan /lib/wifi-uplink/wifi-darmstadt/captive.sh
 fi
