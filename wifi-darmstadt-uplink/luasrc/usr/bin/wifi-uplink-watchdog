@@ -28,7 +28,7 @@ local function check_connectivity()
 	end
 
 	-- Make sure we query this using the WAN resolver
-	local ret = os.execute('gluon-wan curl -o ' .. connectivity_check_file .. ' ' .. connectivity_check_url)
+	local ret = os.execute('gluon-wan curl -s -o ' .. connectivity_check_file .. ' ' .. connectivity_check_url)
 
 	if ret ~= 0 then
 		clean_connectivity_check_file()
